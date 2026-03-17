@@ -1,36 +1,105 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Hôtel Clair de Lune — Application de réservation
 
-## Getting Started
+Application web permettant aux clients de réserver directement les suites des hôtels ruraux du groupe **Hôtel Clair de Lune**, sans passer par des plateformes tierces. Elle offre également une interface de gestion pour les administrateurs et les gérants.
 
-First, run the development server:
+## Stack technique
+
+- **Framework** : Next.js 16 (App Router) avec TypeScript
+- **Base de données** : PostgreSQL via Drizzle ORM
+- **Authentification** : Better Auth
+- **Styles** : Tailwind CSS v4
+
+## Prérequis
+
+- Node.js >= 20
+- PostgreSQL >= 14
+
+## Installation en local
+
+### 1. Cloner le dépôt
+
+```bash
+git clone <url-du-repo>
+cd hotel-jp-ad-as
+```
+
+### 2. Installer les dépendances
+
+```bash
+npm install
+```
+
+### 3. Configurer les variables d'environnement
+
+Créer un fichier `.env.local` à la racine du projet :
+
+```env
+DATABASE_URL=postgresql://<utilisateur>:<mot_de_passe>@localhost:5432/<nom_de_la_base>
+BETTER_AUTH_SECRET=<une_chaine_aleatoire_longue>
+BETTER_AUTH_URL=http://localhost:3000
+```
+
+### 4. Initialiser la base de données
+
+```bash
+npx drizzle-kit migrate
+```
+
+### 5. Lancer le serveur de développement
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+L'application est accessible sur [http://localhost:3000](http://localhost:3000).
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Créer un compte administrateur
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Après avoir lancé l'application, exécuter le script de seed pour créer le premier compte administrateur :
 
-## Learn More
+```bash
+npm run seed
+```
 
-To learn more about Next.js, take a look at the following resources:
+Les identifiants par défaut seront affichés dans le terminal. **Pensez à changer le mot de passe dès la première connexion.**
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+> Si le script `seed` n'est pas encore disponible, créer manuellement un enregistrement dans la table `users` avec le rôle `admin`.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Commandes disponibles
 
-## Deploy on Vercel
+```bash
+npm run dev      # Serveur de développement
+npm run build    # Build de production
+npm run start    # Serveur de production
+npm run lint     # Vérification ESLint
+```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Fonctionnalités
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+| User Story | Rôle         | Description                                               |
+|------------|--------------|-----------------------------------------------------------|
+| US1        | Admin        | Gérer les établissements (CRUD)                           |
+| US2        | Admin        | Gérer les gérants (CRUD)                                  |
+| US3        | Gérant       | Gérer les suites de son hôtel (CRUD)                      |
+| US4        | Visiteur     | Consulter les établissements et les suites disponibles    |
+| US5        | Client       | Réserver une suite en ligne avec vérification de dispo    |
+| US6        | Client       | Consulter et annuler ses réservations (délai : 3 jours)   |
+| US7        | Visiteur     | Contacter un établissement via un formulaire              |
+
+## Structure du projet
+
+```
+src/
+└── app/          # Routes Next.js (App Router)
+    ├── layout.tsx
+    ├── page.tsx
+    └── globals.css
+```
+
+## Contribution
+
+Une branche par fonctionnalité, commits atomiques et réguliers.
+
+```bash
+git checkout -b feat/us1-gestion-etablissements
+```
