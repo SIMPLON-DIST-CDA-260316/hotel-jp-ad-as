@@ -56,6 +56,7 @@ export const messages = pgTable("message", {
   content: text("content"),
   visitorEmail: varchar("visitor_email", { length: 255 }),
   userId: integer("user_id").references(() => users.id, { onDelete: "cascade" }),
+  hotelId: integer("hotel_id").references(() => hotels.id, { onDelete: "cascade" }),
 }, (table) => [
   check("contact_check", sql`${table.visitorEmail} IS NOT NULL OR ${table.userId} IS NOT NULL`),
 ]);
