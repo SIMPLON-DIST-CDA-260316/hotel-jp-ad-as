@@ -12,7 +12,7 @@ Application web permettant aux clients de réserver directement les suites des h
 ## Prérequis
 
 - Node.js >= 20
-- Un projet [Supabase](https://supabase.com) (base de données PostgreSQL hébergée)
+- PostgreSQL >= 14 installé en local — [télécharger ici](https://www.postgresql.org/download)
 
 ## Installation en local
 
@@ -29,39 +29,46 @@ cd hotel-jp-ad-as
 npm install
 ```
 
-### 3. Configurer les variables d'environnement
+### 3. Créer la base de données locale
 
-Créer un fichier `.env.local` à la racine du projet (ne jamais le committer) :
+```bash
+psql -U postgres -c "CREATE DATABASE hotel_dev;"
+```
+
+### 4. Configurer les variables d'environnement
+
+Copier `.env.example` en `.env.local` et remplacer `<ton-mdp-local>` par ton mot de passe PostgreSQL (ou le supprimer si pas de mot de passe) :
+
+```bash
+cp .env.example .env.local
+```
 
 ```env
-# URL poolée (Transaction pooler, port 6543) — utilisée par l'application
-DATABASE_URL="postgresql://postgres.[project-ref]:[password]@aws-0-[region].pooler.supabase.com:6543/postgres"
+DATABASE_URL=postgresql://postgres:<ton-mdp-local>@localhost:5432/hotel_dev
+DATABASE_URL_UNPOOLED=postgresql://postgres:<ton-mdp-local>@localhost:5432/hotel_dev
 
-# URL directe (port 5432) — utilisée par Drizzle Kit pour les migrations
-DATABASE_URL_UNPOOLED="postgresql://postgres.[project-ref]:[password]@aws-0-[region].pooler.supabase.com:5432/postgres"
-
-BETTER_AUTH_SECRET=<une_chaine_aleatoire_longue>
+BETTER_AUTH_SECRET=nimporte_quelle_chaine_en_dev
 BETTER_AUTH_URL=http://localhost:3000
 ```
 
-> Les URLs de connexion se trouvent dans **Supabase → Project Settings → Database → Connect → onglet Drizzle**.
-> Remplacer `[password]` par le mot de passe du projet Supabase (sans crochets).
+> Ne jamais committer `.env.local` — il est dans le `.gitignore`.
 
-### 4. Initialiser la base de données
+### 5. Initialiser la base de données
 
 ```bash
-npm run db:generate   # génère les fichiers de migration
-npm run db:migrate    # applique les migrations sur Supabase
-npm run db:seed       # peuple la base avec des données de test
+npm run db:migrate    # crée les tables
+npm run db:seed       # insère les données de test
 ```
 
-### 5. Lancer le serveur de développement
+### 6. Lancer le serveur de développement
 
 ```bash
 npm run dev
 ```
 
 L'application est accessible sur [http://localhost:3000](http://localhost:3000).
+
+> Pour le guide complet (psql, Drizzle Studio, connexion VSCode), voir [ONBOARDING.md](ONBOARDING.md).
 
 ## Commandes disponibles
 
