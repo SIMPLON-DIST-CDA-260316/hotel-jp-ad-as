@@ -12,7 +12,7 @@ Application web permettant aux clients de réserver directement les suites des h
 ## Prérequis
 
 - Node.js >= 20
-- PostgreSQL >= 14
+- Un projet [Supabase](https://supabase.com) (base de données PostgreSQL hébergée)
 
 ## Installation en local
 
@@ -31,18 +31,28 @@ npm install
 
 ### 3. Configurer les variables d'environnement
 
-Créer un fichier `.env.local` à la racine du projet :
+Créer un fichier `.env.local` à la racine du projet (ne jamais le committer) :
 
 ```env
-DATABASE_URL=postgresql://<utilisateur>:<mot_de_passe>@localhost:5432/<nom_de_la_base>
+# URL poolée (Transaction pooler, port 6543) — utilisée par l'application
+DATABASE_URL="postgresql://postgres.[project-ref]:[password]@aws-0-[region].pooler.supabase.com:6543/postgres"
+
+# URL directe (port 5432) — utilisée par Drizzle Kit pour les migrations
+DATABASE_URL_UNPOOLED="postgresql://postgres.[project-ref]:[password]@aws-0-[region].pooler.supabase.com:5432/postgres"
+
 BETTER_AUTH_SECRET=<une_chaine_aleatoire_longue>
 BETTER_AUTH_URL=http://localhost:3000
 ```
 
+> Les URLs de connexion se trouvent dans **Supabase → Project Settings → Database → Connect → onglet Drizzle**.
+> Remplacer `[password]` par le mot de passe du projet Supabase (sans crochets).
+
 ### 4. Initialiser la base de données
 
 ```bash
-npx drizzle-kit migrate
+npm run db:generate   # génère les fichiers de migration
+npm run db:migrate    # applique les migrations sur Supabase
+npm run db:seed       # peuple la base avec des données de test
 ```
 
 ### 5. Lancer le serveur de développement
@@ -53,25 +63,17 @@ npm run dev
 
 L'application est accessible sur [http://localhost:3000](http://localhost:3000).
 
-## Créer un compte administrateur
-
-Après avoir lancé l'application, exécuter le script de seed pour créer le premier compte administrateur :
-
-```bash
-npm run seed
-```
-
-Les identifiants par défaut seront affichés dans le terminal. **Pensez à changer le mot de passe dès la première connexion.**
-
-> Si le script `seed` n'est pas encore disponible, créer manuellement un enregistrement dans la table `users` avec le rôle `admin`.
-
 ## Commandes disponibles
 
 ```bash
-npm run dev      # Serveur de développement
-npm run build    # Build de production
-npm run start    # Serveur de production
-npm run lint     # Vérification ESLint
+npm run dev           # Serveur de développement
+npm run build         # Build de production
+npm run start         # Serveur de production
+npm run lint          # Vérification ESLint
+npm run db:generate   # Génère les fichiers de migration SQL
+npm run db:migrate    # Applique les migrations sur Supabase
+npm run db:studio     # Interface visuelle pour explorer la base
+npm run db:seed       # Peuple la base avec des données de test
 ```
 
 ## Fonctionnalités
