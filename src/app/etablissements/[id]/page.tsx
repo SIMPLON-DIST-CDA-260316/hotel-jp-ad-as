@@ -18,7 +18,7 @@ type Props = {
     params: Promise<{ id: string }>;
 };
 
-export default async function EtablissementPage( props: Props) {
+export default async function EtablissementPage(props: Props) {
 
     // On récupère les paramètres de l'URL
     // await car params est une Promise dans Next.js 16
@@ -93,22 +93,24 @@ export default async function EtablissementPage( props: Props) {
             />
 
             {/* Infos de l'hôtel */}
-            <div className="mb-10">
+            <div className="mb-10 text-center">
                 <h1 className="text-3xl font-bold mb-2">{hotel.name}</h1>
                 <p className="text-foreground/60 mb-1">{hotel.city} — {hotel.address}</p>
                 {/* On affiche la description seulement si elle existe */}
                 {hotel.description && (
                     <p className="mt-4 text-foreground/80">{hotel.description}</p>
                 )}
-            </div>
 
-            {/* Lien de contact */}
-            <Link
-                href={`/contact?etablissement=${hotel.id}`}
-                className="inline-block mb-10 text-icon hover:underline"
-            >
-                Contacter cet établissement
-            </Link>
+
+                {/* Lien de contact */}
+                <Link
+                    href={`/contact?etablissement=${hotel.id}`}
+                    className="inline-block mb-10 mt-4 text-icon hover:underline"
+                >
+                    Contacter cet établissement
+                </Link>
+
+            </div>
 
             {/* Section des suites */}
             <h2 className="text-2xl font-semibold mb-6">Les suites disponibles</h2>
