@@ -26,15 +26,16 @@ CREATE TABLE "hotel" (
 CREATE TABLE "image" (
 	"id" serial PRIMARY KEY NOT NULL,
 	"link" varchar(255) NOT NULL,
-	"description" text NOT NULL,
-	"suite_id" integer NOT NULL
+	"description" text,
+	"suite_id" integer,
+	"hotel_id" integer,
+	CONSTRAINT "image_owner_check" CHECK ("image"."suite_id" IS NOT NULL OR "image"."hotel_id" IS NOT NULL)
 );
 --> statement-breakpoint
 CREATE TABLE "message" (
 	"id" serial PRIMARY KEY NOT NULL,
 	"topic" varchar(50) NOT NULL,
 	"content" text,
-	"visitor_name" varchar(100),
 	"visitor_email" varchar(255),
 	"user_id" text,
 	"hotel_id" integer,
@@ -100,6 +101,7 @@ CREATE TABLE "verification" (
 ALTER TABLE "account" ADD CONSTRAINT "account_user_id_user_id_fk" FOREIGN KEY ("user_id") REFERENCES "public"."user"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "hotel" ADD CONSTRAINT "hotel_user_id_user_id_fk" FOREIGN KEY ("user_id") REFERENCES "public"."user"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "image" ADD CONSTRAINT "image_suite_id_suite_id_fk" FOREIGN KEY ("suite_id") REFERENCES "public"."suite"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE "image" ADD CONSTRAINT "image_hotel_id_hotel_id_fk" FOREIGN KEY ("hotel_id") REFERENCES "public"."hotel"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "message" ADD CONSTRAINT "message_user_id_user_id_fk" FOREIGN KEY ("user_id") REFERENCES "public"."user"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "message" ADD CONSTRAINT "message_hotel_id_hotel_id_fk" FOREIGN KEY ("hotel_id") REFERENCES "public"."hotel"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "reservation" ADD CONSTRAINT "reservation_user_id_user_id_fk" FOREIGN KEY ("user_id") REFERENCES "public"."user"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint

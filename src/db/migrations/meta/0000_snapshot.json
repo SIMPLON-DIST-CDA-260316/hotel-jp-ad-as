@@ -1,5 +1,5 @@
 {
-  "id": "b63a0e48-652d-40c1-b6d8-eb13b58781dc",
+  "id": "7a677e5c-c433-4488-a85a-6ef63708771f",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -192,13 +192,19 @@
           "name": "description",
           "type": "text",
           "primaryKey": false,
-          "notNull": true
+          "notNull": false
         },
         "suite_id": {
           "name": "suite_id",
           "type": "integer",
           "primaryKey": false,
-          "notNull": true
+          "notNull": false
+        },
+        "hotel_id": {
+          "name": "hotel_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
         }
       },
       "indexes": {},
@@ -215,12 +221,30 @@
           ],
           "onDelete": "cascade",
           "onUpdate": "no action"
+        },
+        "image_hotel_id_hotel_id_fk": {
+          "name": "image_hotel_id_hotel_id_fk",
+          "tableFrom": "image",
+          "tableTo": "hotel",
+          "columnsFrom": [
+            "hotel_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
         }
       },
       "compositePrimaryKeys": {},
       "uniqueConstraints": {},
       "policies": {},
-      "checkConstraints": {},
+      "checkConstraints": {
+        "image_owner_check": {
+          "name": "image_owner_check",
+          "value": "\"image\".\"suite_id\" IS NOT NULL OR \"image\".\"hotel_id\" IS NOT NULL"
+        }
+      },
       "isRLSEnabled": false
     },
     "public.message": {
@@ -242,12 +266,6 @@
         "content": {
           "name": "content",
           "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "visitor_name": {
-          "name": "visitor_name",
-          "type": "varchar(100)",
           "primaryKey": false,
           "notNull": false
         },
