@@ -1,22 +1,11 @@
 import Link from "next/link";
 import Image from "next/image";
 import { db } from "@/db";
-import { hotels, suites } from "@/db/schema";
+import { hotels, suites, images } from "@/db/schema";
 import { count, eq, sql } from "drizzle-orm";
 import HotelsCarouselClient from "./hotels-carousel-client";
 
-const hotelImages: Record<string, string> = {
-  "Le Grand Palais": "/images/hotels/le-grand-palais.jpg",
-  "Château des Lumières": "/images/hotels/chateau-des-lumieres.jpg",
-  "L'Élégance Dorée": "/images/hotels/elegance-doree.avif",
-  "Villa Belle Époque": "/images/hotels/villa-belle-epoque.jpg",
-  "Les Terrasses du Midi": "/images/hotels/terasse-du-midi.jpg",
-  "Manoir Saint-Germain": "/images/hotels/manoir-saint-germain.jpg",
-  "L'Étoile de Paris": "/images/hotels/etoile-de-paris.avif",
-  "Le Refuge des Alpes": "/images/hotels/refuge-des-alpes.jpg",
-  "La Maison Dorée": "/images/hotels/maison-doree.png",
-  "Hôtel des Grands Crus": "/images/hotels/hotel-des-grands-crus.webp",
-};
+const FALLBACK_IMAGE = "/images/hotels/le-grand-palais.jpg";
 
 type Props = {
   variant?: "grid" | "carousel";
@@ -30,6 +19,7 @@ export default async function HotelsGrid({ variant = "grid" }: Props) {
       city: hotels.city,
       description: hotels.description,
       suiteCount: count(suites.id),
+      image: sql<string | null>`(SELECT link FROM image WHERE hotel_id = ${hotels.id} LIMIT 1)`,
     })
     .from(hotels)
     .leftJoin(suites, eq(suites.hotelId, hotels.id))
@@ -47,6 +37,7 @@ export default async function HotelsGrid({ variant = "grid" }: Props) {
         city: hotels.city,
         description: hotels.description,
         suiteCount: count(suites.id),
+        image: sql<string | null>`(SELECT link FROM image WHERE hotel_id = ${hotels.id} LIMIT 1)`,
       })
       .from(hotels)
       .leftJoin(suites, eq(suites.hotelId, hotels.id))
@@ -56,7 +47,7 @@ export default async function HotelsGrid({ variant = "grid" }: Props) {
     const hotelsWithImages = shuffled.map((hotel) => ({
       ...hotel,
       suiteCount: String(hotel.suiteCount),
-      image: hotelImages[hotel.name] ?? "/images/hotels/le-grand-palais.jpg",
+      image: hotel.image ?? FALLBACK_IMAGE,
     }));
 
     return <HotelsCarouselClient hotels={hotelsWithImages} />;
@@ -72,7 +63,7 @@ export default async function HotelsGrid({ variant = "grid" }: Props) {
         >
           <div className="relative h-48 w-full">
             <Image
-              src={hotelImages[hotel.name] ?? "/images/hotels/le-grand-palais.jpg"}
+              src={hotel.image ?? FALLBACK_IMAGE}
               alt={hotel.name}
               fill
               className="object-cover"

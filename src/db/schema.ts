@@ -34,9 +34,12 @@ export const suites = pgTable("suite", {
 export const images = pgTable("image", {
   id: serial("id").primaryKey(),
   link: varchar("link", { length: 255 }).notNull(),
-  description: text("description").notNull(),
-  suiteId: integer("suite_id").notNull().references(() => suites.id, { onDelete: "cascade" }),
-});
+  description: text("description"),
+  suiteId: integer("suite_id").references(() => suites.id, { onDelete: "cascade" }),
+  hotelId: integer("hotel_id").references(() => hotels.id, { onDelete: "cascade" }),
+}, (table) => [
+  check("image_owner_check", sql`${table.suiteId} IS NOT NULL OR ${table.hotelId} IS NOT NULL`),
+]);
 
 export const reservations = pgTable("reservation", {
   id: serial("id").primaryKey(),
