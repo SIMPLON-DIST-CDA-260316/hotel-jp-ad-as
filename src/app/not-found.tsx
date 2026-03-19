@@ -1,1 +1,1 @@
-export default function notFound() { } 
+export default function NotFound() {}

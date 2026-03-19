@@ -1,6 +1,18 @@
-import { db } from "./index";
-import { users, hotels, suites, images, reservations } from "./schema";
+import { config } from "dotenv";
+config({ path: ".env.local" });
+
+import { auth } from "@/lib/auth";
 import { faker } from "@faker-js/faker/locale/fr";
+import { db } from "./index";
+import {
+  accounts,
+  hotels,
+  images,
+  reservations,
+  sessions,
+  suites,
+  users,
+} from "./schema";
 
 async function seed() {
   console.log("Nettoyage des données existantes...");
@@ -8,28 +20,41 @@ async function seed() {
   await db.delete(images);
   await db.delete(suites);
   await db.delete(hotels);
+  await db.delete(sessions);
+  await db.delete(accounts);
   await db.delete(users);
 
   console.log("Création des utilisateurs...");
-  const createdUsers = await db.insert(users).values([
-    {
+
+  const { user: adminUser } = await auth.api.signUpEmail({
+    body: {
+      email: "admin@hotel.com",
+      password: "Admin1234!",
+      name: "Admin Hôtel",
       firstname: "Admin",
       lastname: "Hôtel",
-      email: "admin@hotel.com",
-      hashedPassword: "hashed_placeholder",
-      role: "admin",
     },
-    ...Array.from({ length: 5 }, () => ({
-      firstname: faker.person.firstName(),
-      lastname: faker.person.lastName(),
-      email: faker.internet.email(),
-      hashedPassword: "hashed_placeholder",
-      role: "client" as const,
-    })),
-  ]).returning();
+  });
 
-  const adminUser = createdUsers[0];
-  const clientUsers = createdUsers.slice(1);
+  const clientUsers = await Promise.all(
+    Array.from({ length: 5 }, async () => {
+      const firstname = faker.person.firstName();
+      const lastname = faker.person.lastName();
+      const { user } = await auth.api.signUpEmail({
+        body: {
+          email: faker.internet.email({
+            firstName: firstname,
+            lastName: lastname,
+          }),
+          password: "Client1234!",
+          name: `${firstname} ${lastname}`,
+          firstname,
+          lastname,
+        },
+      });
+      return user;
+    }),
+  );
 
   console.log("Création des hôtels...");
   const hotelNames = [
@@ -45,17 +70,31 @@ async function seed() {
     "Hôtel des Grands Crus",
   ];
 
-  const frenchCities = ["Paris", "Lyon", "Bordeaux", "Nice", "Strasbourg", "Marseille", "Toulouse", "Nantes", "Biarritz", "Annecy"];
+  const frenchCities = [
+    "Paris",
+    "Lyon",
+    "Bordeaux",
+    "Nice",
+    "Strasbourg",
+    "Marseille",
+    "Toulouse",
+    "Nantes",
+    "Biarritz",
+    "Annecy",
+  ];
 
-  const createdHotels = await db.insert(hotels).values(
-    hotelNames.map((name, i) => ({
-      name,
-      city: frenchCities[i],
-      address: faker.location.streetAddress(),
-      description: faker.lorem.paragraph(),
-      userId: adminUser.id,
-    }))
-  ).returning();
+  const createdHotels = await db
+    .insert(hotels)
+    .values(
+      hotelNames.map((name, i) => ({
+        name,
+        city: frenchCities[i],
+        address: faker.location.streetAddress(),
+        description: faker.lorem.paragraph(),
+        userId: adminUser.id,
+      })),
+    )
+    .returning();
 
   console.log("Création des images hôtels...");
   const hotelImageMap: Record<string, string> = {
@@ -85,14 +124,19 @@ async function seed() {
     const suiteCount = faker.number.int({ min: 3, max: 5 });
     const suiteTypes = ["Deluxe", "Prestige", "Royale", "Exécutive", "Junior"];
 
-    const createdSuites = await db.insert(suites).values(
-      Array.from({ length: suiteCount }, (_, i) => ({
-        title: `Suite ${suiteTypes[i % suiteTypes.length]}`,
-        description: faker.lorem.sentences(2),
-        price: faker.number.float({ min: 150, max: 800, fractionDigits: 2 }).toString(),
-        hotelId: hotel.id,
-      }))
-    ).returning();
+    const createdSuites = await db
+      .insert(suites)
+      .values(
+        Array.from({ length: suiteCount }, (_, i) => ({
+          title: `Suite ${suiteTypes[i % suiteTypes.length]}`,
+          description: faker.lorem.sentences(2),
+          price: faker.number
+            .float({ min: 150, max: 800, fractionDigits: 2 })
+            .toString(),
+          hotelId: hotel.id,
+        })),
+      )
+      .returning();
 
     for (const suite of createdSuites) {
       await db.insert(images).values(
@@ -100,7 +144,7 @@ async function seed() {
           link: `https://picsum.photos/seed/${faker.string.alphanumeric(8)}/800/600`,
           description: faker.lorem.sentence(),
           suiteId: suite.id,
-        }))
+        })),
       );
     }
   }
@@ -126,7 +170,7 @@ async function seed() {
   }
 
   console.log("Seed terminé !");
-  console.log(`  ${createdUsers.length} utilisateurs`);
+  console.log(`  ${1 + clientUsers.length} utilisateurs`);
   console.log(`  ${createdHotels.length} hôtels`);
   console.log(`  ~${createdHotels.length * 4} suites`);
   process.exit(0);
