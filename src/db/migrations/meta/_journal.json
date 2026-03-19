@@ -15,6 +15,13 @@
       "when": 1773832817998,
       "tag": "0001_cuddly_bromley",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1773923172772,
+      "tag": "0002_lean_the_hunter",
+      "breakpoints": true
     }
   ]
 }
