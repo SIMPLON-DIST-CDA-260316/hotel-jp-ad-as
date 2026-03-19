@@ -96,6 +96,29 @@ async function seed() {
     )
     .returning();
 
+  console.log("Création des images hôtels...");
+  const hotelImageMap: Record<string, string> = {
+    "Le Grand Palais": "/images/hotels/le-grand-palais.jpg",
+    "Château des Lumières": "/images/hotels/chateau-des-lumieres.jpg",
+    "L'Élégance Dorée": "/images/hotels/elegance-doree.avif",
+    "Villa Belle Époque": "/images/hotels/villa-belle-epoque.jpg",
+    "Les Terrasses du Midi": "/images/hotels/terasse-du-midi.jpg",
+    "Manoir Saint-Germain": "/images/hotels/manoir-saint-germain.jpg",
+    "L'Étoile de Paris": "/images/hotels/etoile-de-paris.avif",
+    "Le Refuge des Alpes": "/images/hotels/refuge-des-alpes.jpg",
+    "La Maison Dorée": "/images/hotels/maison-doree.png",
+    "Hôtel des Grands Crus": "/images/hotels/hotel-des-grands-crus.webp",
+  };
+
+  await db.insert(images).values(
+    createdHotels
+      .filter((h) => hotelImageMap[h.name])
+      .map((h) => ({
+        link: hotelImageMap[h.name],
+        hotelId: h.id,
+      }))
+  );
+
   console.log("Création des suites et images...");
   for (const hotel of createdHotels) {
     const suiteCount = faker.number.int({ min: 3, max: 5 });
