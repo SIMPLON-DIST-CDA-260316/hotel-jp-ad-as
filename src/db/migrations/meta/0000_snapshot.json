@@ -1,6 +1,6 @@
 {
-  "id": "9fd81e52-d518-4507-bbb1-7d0f4a030650",
-  "prevId": "0e76235b-8b97-4096-922c-02566a08620b",
+  "id": "7a677e5c-c433-4488-a85a-6ef63708771f",
+  "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
   "tables": {
@@ -192,13 +192,19 @@
           "name": "description",
           "type": "text",
           "primaryKey": false,
-          "notNull": true
+          "notNull": false
         },
         "suite_id": {
           "name": "suite_id",
           "type": "integer",
           "primaryKey": false,
-          "notNull": true
+          "notNull": false
+        },
+        "hotel_id": {
+          "name": "hotel_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
         }
       },
       "indexes": {},
@@ -215,12 +221,30 @@
           ],
           "onDelete": "cascade",
           "onUpdate": "no action"
+        },
+        "image_hotel_id_hotel_id_fk": {
+          "name": "image_hotel_id_hotel_id_fk",
+          "tableFrom": "image",
+          "tableTo": "hotel",
+          "columnsFrom": [
+            "hotel_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
         }
       },
       "compositePrimaryKeys": {},
       "uniqueConstraints": {},
       "policies": {},
-      "checkConstraints": {},
+      "checkConstraints": {
+        "image_owner_check": {
+          "name": "image_owner_check",
+          "value": "\"image\".\"suite_id\" IS NOT NULL OR \"image\".\"hotel_id\" IS NOT NULL"
+        }
+      },
       "isRLSEnabled": false
     },
     "public.message": {
@@ -622,6 +646,55 @@
           "value": "\"user\".\"role\" IN ('client', 'admin', 'manager')"
         }
       },
+      "isRLSEnabled": false
+    },
+    "public.verification": {
+      "name": "verification",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "identifier": {
+          "name": "identifier",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "value": {
+          "name": "value",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "expires_at": {
+          "name": "expires_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
       "isRLSEnabled": false
     }
   },
