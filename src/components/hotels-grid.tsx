@@ -2,7 +2,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { db } from "@/db";
 import { hotels, suites } from "@/db/schema";
-import { count, eq } from "drizzle-orm";
+import { count, eq, sql } from "drizzle-orm";
 import HotelsCarouselClient from "./hotels-carousel-client";
 
 const hotelImages: Record<string, string> = {
@@ -40,16 +40,24 @@ export default async function HotelsGrid({ variant = "grid" }: Props) {
   }
 
   if (variant === "carousel") {
-    const hotelsWithImages = hotelList.map((hotel) => ({
+    const shuffled = await db
+      .select({
+        id: hotels.id,
+        name: hotels.name,
+        city: hotels.city,
+        description: hotels.description,
+        suiteCount: count(suites.id),
+      })
+      .from(hotels)
+      .leftJoin(suites, eq(suites.hotelId, hotels.id))
+      .groupBy(hotels.id)
+      .orderBy(sql`RANDOM()`);
+
+    const hotelsWithImages = shuffled.map((hotel) => ({
       ...hotel,
       suiteCount: String(hotel.suiteCount),
       image: hotelImages[hotel.name] ?? "/images/hotels/le-grand-palais.jpg",
     }));
-
-    for (let i = hotelsWithImages.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [hotelsWithImages[i], hotelsWithImages[j]] = [hotelsWithImages[j], hotelsWithImages[i]];
-    }
 
     return <HotelsCarouselClient hotels={hotelsWithImages} />;
   }
