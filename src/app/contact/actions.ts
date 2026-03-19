@@ -3,6 +3,8 @@
 import { db } from "@/db";
 import { messages, hotels } from "@/db/schema";
 import { eq } from "drizzle-orm";
+import { auth } from "@/lib/auth";
+import { headers } from "next/headers";
 
 const CONTACT_TOPICS = [
   "Demande d'information",
@@ -14,6 +16,9 @@ const CONTACT_TOPICS = [
 type Topic = (typeof CONTACT_TOPICS)[number];
 
 export async function sendContactMessage(formData: FormData) {
+  const session = await auth.api.getSession({ headers: await headers() });
+  const userId = session?.user?.id ?? null;
+
   const name = formData.get("name")?.toString().trim();
   const email = formData.get("email")?.toString().trim();
   const topic = formData.get("topic")?.toString();
@@ -44,6 +49,7 @@ export async function sendContactMessage(formData: FormData) {
     topic,
     content,
     hotelId,
+    userId,
   });
 
   return { success: true };

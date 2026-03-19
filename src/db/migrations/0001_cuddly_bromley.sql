@@ -1,2 +1,0 @@
-ALTER TABLE "message" ADD COLUMN "hotel_id" integer;--> statement-breakpoint
-ALTER TABLE "message" ADD CONSTRAINT "message_hotel_id_hotel_id_fk" FOREIGN KEY ("hotel_id") REFERENCES "public"."hotel"("id") ON DELETE cascade ON UPDATE no action;
