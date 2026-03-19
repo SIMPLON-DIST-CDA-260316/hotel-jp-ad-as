@@ -1,4 +1,4 @@
-import Link from "next/link";
+import BackButton from "@/components/BackButton";
 
 export default function NotFound() {
   return (
@@ -21,13 +21,8 @@ export default function NotFound() {
       {/* Séparateur doré */}
       <div className="mt-8 w-12 h-px bg-icon" />
 
-      {/* Bouton retour accueil */}
-      <Link
-        href="/"
-        className="mt-8 inline-block px-8 py-3 rounded-full border border-icon text-icon font-medium hover:bg-icon hover:text-white transition-colors"
-      >
-        Retour à l&apos;accueil
-      </Link>
+      {/* Bouton retour page précédente */}
+      <BackButton />
     </main>
   );
 }
