@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { sendContactMessage } from "./actions";
 
 const CONTACT_TOPICS = [
@@ -19,6 +20,7 @@ export default function ContactForm({
   hotels: Hotel[];
   defaultHotelId?: number;
 }) {
+  const router = useRouter();
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [pending, setPending] = useState(false);
@@ -41,10 +43,13 @@ export default function ContactForm({
         <p className="text-lg font-medium mb-2">Message envoyé avec succès !</p>
         <p className="text-gray-500 mb-8">Nous vous répondrons dans les plus brefs délais.</p>
         <button
-          onClick={() => setSuccess(false)}
+          onClick={() => {
+            if (window.history.length > 1) router.back();
+            else router.push("/");
+          }}
           className="inline-block bg-black text-white px-6 py-3 rounded-full text-sm font-medium hover:bg-zinc-800 transition-colors"
         >
-          Envoyer un autre message
+          Retour à la page précédente
         </button>
       </div>
     );

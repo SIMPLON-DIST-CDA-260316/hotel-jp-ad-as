@@ -1,0 +1,1 @@
+ALTER TABLE "message" ADD COLUMN "visitor_name" varchar(100);
