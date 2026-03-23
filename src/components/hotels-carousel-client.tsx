@@ -30,14 +30,14 @@ export default function HotelsCarouselClient({ hotels }: { hotels: Hotel[] }) {
           <Link
             key={hotel.id}
             href={`/etablissements/${hotel.id}`}
-            className="md:snap-start md:shrink-0 md:w-[calc(25%-12px)] border rounded-xl overflow-hidden hover:shadow-md transition-shadow"
+            className="md:snap-start md:shrink-0 md:w-[calc(25%-12px)] group border rounded-xl overflow-hidden hover:shadow-lg hover:-translate-y-1 transition-all duration-300"
           >
             <div className="relative h-40 w-full">
               <Image
                 src={hotel.image}
                 alt={hotel.name}
                 fill
-                className="object-cover"
+                className="object-cover group-hover:scale-105 transition-transform duration-300"
               />
             </div>
             <div className="p-4">
