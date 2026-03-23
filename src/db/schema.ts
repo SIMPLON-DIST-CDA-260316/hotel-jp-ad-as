@@ -102,6 +102,7 @@ export const messages = pgTable("message", {
   id: serial("id").primaryKey(),
   topic: varchar("topic", { length: 50 }).notNull(),
   content: text("content"),
+  visitorName: varchar("visitor_name", { length: 100 }),
   visitorEmail: varchar("visitor_email", { length: 255 }),
   userId: text("user_id").references(() => users.id, { onDelete: "cascade" }),
   hotelId: integer("hotel_id").references(() => hotels.id, { onDelete: "cascade" }),

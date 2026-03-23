@@ -19,7 +19,7 @@ export default async function HotelsGrid({ variant = "grid" }: Props) {
       city: hotels.city,
       description: hotels.description,
       suiteCount: count(suites.id),
-      image: sql<string | null>`(SELECT link FROM image WHERE hotel_id = ${hotels.id} LIMIT 1)`,
+      image: sql<string | null>`(SELECT link FROM "image" WHERE "image".hotel_id = ${hotels.id} LIMIT 1)`,
     })
     .from(hotels)
     .leftJoin(suites, eq(suites.hotelId, hotels.id))
@@ -37,7 +37,7 @@ export default async function HotelsGrid({ variant = "grid" }: Props) {
         city: hotels.city,
         description: hotels.description,
         suiteCount: count(suites.id),
-        image: sql<string | null>`(SELECT link FROM image WHERE hotel_id = ${hotels.id} LIMIT 1)`,
+        image: sql<string | null>`(SELECT link FROM "image" WHERE "image".hotel_id = ${hotels.id} LIMIT 1)`,
       })
       .from(hotels)
       .leftJoin(suites, eq(suites.hotelId, hotels.id))
