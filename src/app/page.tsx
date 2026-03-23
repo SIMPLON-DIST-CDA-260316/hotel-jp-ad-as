@@ -10,14 +10,14 @@ export default function Home() {
       {/* Hero section — pleine largeur */}
       <section className="relative h-[50vh] min-h-125 w-full overflow-hidden">
         <Image
-          src="/images/hotels/chateau-des-lumieres.jpg"
+          src="/images/heroImage.png"
           alt="Hôtels JP-AD-AS"
           fill
           className="object-cover object-center"
           priority
         />
         {/* Overlay gradient gauche → transparent */}
-        <div className="absolute inset-0 bg-linear-to-r from-foreground/80 via-foreground/50 to-transparent" />
+        <div className="absolute inset-0 bg-linear-to-r from-foreground/90 via-foreground/60 to-transparent" />
 
         <div className="relative z-10 h-full flex flex-col justify-center px-8 md:px-16 lg:px-24 max-w-2xl">
           <p className="text-icon font-semibold text-sm uppercase tracking-widest mb-3">
