@@ -38,8 +38,11 @@ export default function LoginPage() {
             setError("Email ou mot de passe incorrect");
             return;
         }
-
+        // Redirige vers la page d'accueil
         router.push("/");
+
+        // router.refresh() force Next.js à rafraîchir les données de la page pour la navbar
+        router.refresh();
     }
 
     return (
@@ -54,42 +57,49 @@ export default function LoginPage() {
                 <p className="text-red-500 mb-4 text-center text-sm">{error}</p>
             )}
 
-            <div className="mb-4">
-                <label className="block mb-1 font-medium text-foreground">
-                    Email
-                </label>
+            {/* form permet la soumission avec la touche Entrée */}
+            {/* onSubmit → appelle handleSubmit quand l'utilisateur appuie sur Entrée ou clique sur le bouton */}
+            {/* e.preventDefault() → empêche le rechargement de la page par défaut du navigateur */}
+            <form onSubmit={(e) => { e.preventDefault(); handleSubmit(); }}>
 
-                <input
-                    type="email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    className="w-full border border-foreground/20 rounded px-3 py-2 text-foreground focus:outline-none focus:border-icon transition-colors"
-                    placeholder="exemple@mail.com"
-                />
-            </div>
+                <div className="mb-4">
+                    <label className="block mb-1 font-medium text-foreground">
+                        Email
+                    </label>
 
-            {/* Champ mot de passe */}
-            <div className="mb-6">
-                <label className="block mb-1 font-medium text-foreground">
-                    Mot de passe
-                </label>
-                <input
-                    type="password"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    className="w-full border border-foreground/20 rounded px-3 py-2 text-foreground focus:outline-none focus:border-icon transition-colors"
-                    placeholder="Votre mot de passe"
-                />
-            </div>
+                    <input
+                        type="email"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                        className="w-full border border-foreground/20 rounded px-3 py-2 text-foreground focus:outline-none focus:border-icon transition-colors"
+                        placeholder="exemple@mail.com"
+                    />
+                </div>
 
-            {/* Bouton de connexion */}
-            {/* onClick → appelle handleSubmit quand l'utilisateur clique */}
-            <button
-                onClick={handleSubmit}
-                className="w-full bg-foreground text-background py-2 rounded font-medium hover:opacity-90 transition-opacity"
-            >
-                Se connecter
-            </button>
+                {/* Champ mot de passe */}
+                <div className="mb-6">
+                    <label className="block mb-1 font-medium text-foreground">
+                        Mot de passe
+                    </label>
+                    <input
+                        type="password"
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                        className="w-full border border-foreground/20 rounded px-3 py-2 text-foreground focus:outline-none focus:border-icon transition-colors"
+                        placeholder="Votre mot de passe"
+                    />
+                </div>
+
+                {/* Bouton de connexion */}
+                {/* onClick → appelle handleSubmit quand l'utilisateur clique */}
+                <button
+                    type="submit"
+                    className="w-full bg-foreground text-background py-2 rounded font-medium hover:opacity-90 transition-opacity"
+                >
+                    Se connecter
+                </button>
+
+            </form>
 
             {/* Lien vers la page d'inscription */}
             <p className="text-center mt-4 text-foreground/60">
