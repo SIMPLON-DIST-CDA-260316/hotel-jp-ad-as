@@ -1,4 +1,5 @@
 import Footer from "@/components/footer";
+import Navbar from "@/components/navbar";
 import type { Metadata } from "next";
 import { Poppins } from "next/font/google";
 import "./globals.css";
@@ -25,7 +26,8 @@ export default function RootLayout({
       <body
         className={`${poppins.variable} antialiased flex flex-col min-h-screen`}
       >
-        <div className="flex-1">{children}</div>
+        <Navbar />
+        <div className="flex-1 pt-20">{children}</div>
         <Footer />
       </body>
     </html>

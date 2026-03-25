@@ -6,7 +6,7 @@ export const dynamic = "force-dynamic";
 
 export default function Home() {
   return (
-    <main className="w-full">
+    <main className="w-full -mt-20">
       {/* Hero section — pleine largeur */}
       <section className="relative h-[50vh] min-h-125 w-full overflow-hidden">
         <Image
