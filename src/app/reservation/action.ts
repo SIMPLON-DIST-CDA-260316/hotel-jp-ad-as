@@ -186,7 +186,7 @@ export async function cancelReservation(params: CancelReservationParams) {
     .where(eq(reservations.id, reservationId));
 
   // revalidatePath dit à Next.js de rafraîchir la page "Mes réservations"
-  revalidatePath("/client/reservations");
+  revalidatePath("/client/reservation");
 
   return { success: true };
 }
