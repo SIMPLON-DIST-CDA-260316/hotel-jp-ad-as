@@ -23,7 +23,7 @@ export default function Home() {
           <p className="text-icon font-semibold text-sm uppercase tracking-widest mb-3">
             Groupe hôtelier JP-AD-AS
           </p>
-          <h1 className="text-white text-4xl md:text-5xl lg:text-6xl font-bold leading-tight mb-6">
+          <h1 className="text-white text-4xl md:text-5xl lg:text-6xl font-bold leading-tight mb-6 whitespace-nowrap">
             Hôtels Clair de Lune
           </h1>
           <p className="text-white/85 text-base md:text-lg font-light max-w-md mb-8">

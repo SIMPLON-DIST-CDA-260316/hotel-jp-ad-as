@@ -13,7 +13,7 @@ const fields = [
   { name: "confirmPassword", label: "Confirmer le mot de passe", type: "password", placeholder: "" },
 ] as const;
 
-const inputClass = "border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-black";
+const inputClass = "border border-foreground/20 rounded px-3 py-2 text-sm text-foreground focus:outline-none focus:border-icon transition-colors";
 
 function validate(f: Record<string, string>): string | null {
   if (fields.some(({ name }) => !f[name]))
@@ -110,7 +110,7 @@ export default function RegisterPage() {
         ))}
 
         <button type="submit" disabled={pending}
-          className="self-start bg-black text-white px-6 py-3 rounded-full text-sm font-medium hover:bg-zinc-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
+          className="w-full bg-foreground text-background py-2 rounded font-medium hover:opacity-90 transition-opacity disabled:opacity-50 disabled:cursor-not-allowed">
           {pending ? "Inscription en cours..." : "Créer mon compte"}
         </button>
 
