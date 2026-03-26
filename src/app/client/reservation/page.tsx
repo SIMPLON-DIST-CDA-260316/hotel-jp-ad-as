@@ -8,7 +8,12 @@ import Link from "next/link";
 
 export const dynamic = "force-dynamic";
 
-export default async function ClientReservationsPage() {
+export default async function ClientReservationsPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ success?: string }>;
+}) {
+  const { success } = await searchParams;
   const session = await auth.api.getSession({
     headers: await headers(),
   });
@@ -38,6 +43,11 @@ export default async function ClientReservationsPage() {
 
   return (
     <main className="max-w-6xl mx-auto px-4 py-12">
+      {success === "true" && (
+        <div className="mb-8 bg-green-50 border border-green-200 text-green-800 rounded-xl px-5 py-4 text-sm font-medium">
+          Votre réservation a bien été confirmée. Retrouvez-la ci-dessous.
+        </div>
+      )}
       {/* ── En-tête ─────────────────────────────────────────────────── */}
       <div className="mb-10">
         <p className="text-icon font-semibold text-xs uppercase tracking-widest mb-2">
