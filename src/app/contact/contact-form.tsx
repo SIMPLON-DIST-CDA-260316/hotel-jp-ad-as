@@ -47,7 +47,7 @@ export default function ContactForm({
             if (window.history.length > 1) router.back();
             else router.push("/");
           }}
-          className="inline-block bg-black text-white px-6 py-3 rounded-full text-sm font-medium hover:bg-zinc-800 transition-colors"
+          className="inline-block bg-foreground text-background px-6 py-3 rounded text-sm font-medium hover:opacity-90 transition-opacity"
         >
           Retour à la page précédente
         </button>
@@ -72,7 +72,7 @@ export default function ContactForm({
           name="hotelId"
           defaultValue={defaultHotelId ?? ""}
           required
-          className="border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-black"
+          className="border border-foreground/20 rounded px-3 py-2 text-sm text-foreground focus:outline-none focus:border-icon transition-colors"
         >
           <option value="" disabled>
             Sélectionnez un établissement
@@ -94,7 +94,7 @@ export default function ContactForm({
           name="topic"
           defaultValue=""
           required
-          className="border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-black"
+          className="border border-foreground/20 rounded px-3 py-2 text-sm text-foreground focus:outline-none focus:border-icon transition-colors"
         >
           <option value="" disabled>
             Sélectionnez un sujet
@@ -116,7 +116,7 @@ export default function ContactForm({
           name="name"
           type="text"
           required
-          className="border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-black"
+          className="border border-foreground/20 rounded px-3 py-2 text-sm text-foreground focus:outline-none focus:border-icon transition-colors"
           placeholder="Jean Dupont"
         />
       </div>
@@ -130,7 +130,7 @@ export default function ContactForm({
           name="email"
           type="email"
           required
-          className="border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-black"
+          className="border border-foreground/20 rounded px-3 py-2 text-sm text-foreground focus:outline-none focus:border-icon transition-colors"
           placeholder="jean@exemple.fr"
         />
       </div>
@@ -144,7 +144,7 @@ export default function ContactForm({
           name="content"
           required
           rows={5}
-          className="border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-black resize-none"
+          className="border border-foreground/20 rounded px-3 py-2 text-sm text-foreground focus:outline-none focus:border-icon transition-colors resize-none"
           placeholder="Votre message..."
         />
       </div>
@@ -152,7 +152,7 @@ export default function ContactForm({
       <button
         type="submit"
         disabled={pending}
-        className="self-start bg-black text-white px-6 py-3 rounded-full text-sm font-medium hover:bg-zinc-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+        className="w-full bg-foreground text-background py-2 rounded font-medium hover:opacity-90 transition-opacity disabled:opacity-50 disabled:cursor-not-allowed"
       >
         {pending ? "Envoi en cours..." : "Envoyer le message"}
       </button>
