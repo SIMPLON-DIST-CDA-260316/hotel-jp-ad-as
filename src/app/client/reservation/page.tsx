@@ -4,6 +4,7 @@ import { reservations, suites, hotels } from "@/db/schema";
 import { eq } from "drizzle-orm";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
+import CancelButton from "@/components/cancelButton";
 import Link from "next/link";
 
 export const dynamic = "force-dynamic";
@@ -149,6 +150,10 @@ function ReservationCard({ reservation: r }: { reservation: Reservation }) {
     currency: "EUR",
   });
 
+  const limitDate = new Date();
+  limitDate.setDate(limitDate.getDate() + 3);
+  const limitDateString = limitDate.toISOString().split("T")[0];
+
   return (
     <div className="rounded-2xl border border-foreground/10 p-6 flex flex-col sm:flex-row sm:items-center gap-4 hover:shadow-sm transition-shadow">
       {/* Infos principale */}
@@ -178,6 +183,15 @@ function ReservationCard({ reservation: r }: { reservation: Reservation }) {
           </p>
         </div>
         <StatusBadge status={r.status} />
+
+        {/* bouton d'annulation */}
+        {r.status === "confirmed" && (
+          <CancelButton
+          reservationId={r.id}
+          possibleToCancel={r.dateBegin > limitDateString}
+          />
+        )}
+        
       </div>
     </div>
   );
