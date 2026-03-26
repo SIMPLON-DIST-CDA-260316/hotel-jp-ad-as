@@ -1,8 +1,8 @@
 import { db } from "@/db";
 import { suites } from "@/db/schema";
 import { eq } from "drizzle-orm";
-import { redirect, notFound } from "next/navigation";
-import { updateSuite, requireManager } from "../../actions";
+import { notFound, redirect } from "next/navigation";
+import { requireManager, updateSuite } from "../../actions";
 import SuiteForm from "../../suite-form";
 
 export default async function EditSuitePage({
@@ -14,7 +14,12 @@ export default async function EditSuitePage({
   if (!hotel) redirect("/manager/suites");
 
   const { id } = await params;
-  const suite = await db.select().from(suites).where(eq(suites.id, Number(id))).limit(1).then((rows) => rows[0]);
+  const suite = await db
+    .select()
+    .from(suites)
+    .where(eq(suites.id, Number(id)))
+    .limit(1)
+    .then((rows) => rows[0]);
   if (!suite || suite.hotelId !== hotel.id) notFound();
 
   return (

@@ -1,10 +1,10 @@
 import { db } from "@/db";
-import { suites, images } from "@/db/schema";
+import { images, suites } from "@/db/schema";
 import { eq } from "drizzle-orm";
-import Link from "next/link";
 import Image from "next/image";
-import DeleteButton from "./delete-button";
+import Link from "next/link";
 import { requireManager } from "./actions";
+import DeleteButton from "./delete-button";
 
 export default async function ManagerSuitesPage() {
   const { hotel } = await requireManager();
@@ -34,7 +34,7 @@ export default async function ManagerSuitesPage() {
         .limit(1)
         .then((rows) => rows[0]);
       return { ...suite, imageLink: img?.link ?? null };
-    })
+    }),
   );
 
   return (
@@ -61,10 +61,18 @@ export default async function ManagerSuitesPage() {
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {hotelSuites.map((suite) => (
-            <div key={suite.id} className="rounded-xl border border-foreground/10 overflow-hidden">
+            <div
+              key={suite.id}
+              className="rounded-xl border border-foreground/10 overflow-hidden"
+            >
               <div className="relative h-48 bg-foreground/5">
                 {suite.imageLink ? (
-                  <Image src={suite.imageLink} alt={suite.title} fill className="object-cover" />
+                  <Image
+                    src={suite.imageLink}
+                    alt={suite.title}
+                    fill
+                    className="object-cover"
+                  />
                 ) : (
                   <div className="flex items-center justify-center h-full text-foreground/30 text-sm">
                     Aucune image
@@ -72,9 +80,15 @@ export default async function ManagerSuitesPage() {
                 )}
               </div>
               <div className="p-4">
-                <h3 className="font-semibold text-foreground mb-1">{suite.title}</h3>
+                <h3 className="font-semibold text-foreground mb-1">
+                  {suite.title}
+                </h3>
                 <p className="text-icon font-medium text-sm mb-3">
-                  {Number(suite.price).toLocaleString("fr-FR", { style: "currency", currency: "EUR" })} / nuit
+                  {Number(suite.price).toLocaleString("fr-FR", {
+                    style: "currency",
+                    currency: "EUR",
+                  })}{" "}
+                  / nuit
                 </p>
                 <div className="flex items-center gap-3">
                   <Link
