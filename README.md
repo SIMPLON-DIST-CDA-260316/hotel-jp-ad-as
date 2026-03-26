@@ -12,7 +12,25 @@ Application web permettant aux clients de réserver directement les suites des h
 ## Prérequis
 
 - Node.js >= 20
-- PostgreSQL >= 14 installé en local — [télécharger ici](https://www.postgresql.org/download)
+- PostgreSQL >= 14 installé en local
+
+### Installer PostgreSQL
+
+**macOS (Homebrew)**
+```bash
+brew install postgresql@16
+brew services start postgresql@16
+```
+
+**Ubuntu / Debian**
+```bash
+sudo apt update
+sudo apt install postgresql postgresql-contrib
+sudo service postgresql start
+```
+
+**Windows**
+Télécharger l'installeur sur [postgresql.org/download/windows](https://www.postgresql.org/download/windows/) et suivre l'assistant. Le service démarre automatiquement.
 
 ## Installation en local
 
@@ -29,13 +47,31 @@ cd hotel-jp-ad-as
 npm install
 ```
 
-### 3. Créer la base de données locale
+### 3. Vérifier que PostgreSQL tourne
+
+```bash
+pg_isready
+```
+
+Si la commande retourne `accepting connections`, PostgreSQL est prêt. Sinon, démarrer le service :
+
+```bash
+# macOS
+brew services start postgresql@16
+
+# Linux
+sudo service postgresql start
+```
+
+### 4. Créer la base de données locale
 
 ```bash
 psql -U postgres -c "CREATE DATABASE hotel_dev;"
 ```
 
-### 4. Configurer les variables d'environnement
+> Sur certaines installations Linux, le compte `postgres` n'a pas de mot de passe. Si la commande échoue, essayer `sudo -u postgres psql -c "CREATE DATABASE hotel_dev;"`.
+
+### 5. Configurer les variables d'environnement
 
 Copier `.env.example` en `.env.local` et remplacer `<ton-mdp-local>` par ton mot de passe PostgreSQL (ou le supprimer si pas de mot de passe) :
 
@@ -49,18 +85,19 @@ DATABASE_URL_UNPOOLED=postgresql://postgres:<ton-mdp-local>@localhost:5432/hotel
 
 BETTER_AUTH_SECRET=nimporte_quelle_chaine_en_dev
 BETTER_AUTH_URL=http://localhost:3000
+NEXT_PUBLIC_APP_URL=http://localhost:3000
 ```
 
 > Ne jamais committer `.env.local` — il est dans le `.gitignore`.
 
-### 5. Initialiser la base de données
+### 6. Initialiser la base de données
 
 ```bash
 npm run db:migrate    # crée les tables
 npm run db:seed       # insère les données de test
 ```
 
-### 6. Lancer le serveur de développement
+### 7. Lancer le serveur de développement
 
 ```bash
 npm run dev
@@ -68,7 +105,12 @@ npm run dev
 
 L'application est accessible sur [http://localhost:3000](http://localhost:3000).
 
-> Pour le guide complet (psql, Drizzle Studio, connexion VSCode), voir [ONBOARDING.md](ONBOARDING.md).
+### Comptes de test (après le seed)
+
+| Rôle    | Email              | Mot de passe |
+|---------|--------------------|--------------|
+| Admin   | admin@hotel.com    | Admin1234!   |
+| Clients | 5 comptes générés automatiquement (emails affichés dans la console du seed) | |
 
 ## Commandes disponibles
 
@@ -78,7 +120,7 @@ npm run build         # Build de production
 npm run start         # Serveur de production
 npm run lint          # Vérification ESLint
 npm run db:generate   # Génère les fichiers de migration SQL
-npm run db:migrate    # Applique les migrations sur Supabase
+npm run db:migrate    # Applique les migrations en local
 npm run db:studio     # Interface visuelle pour explorer la base
 npm run db:seed       # Peuple la base avec des données de test
 ```
