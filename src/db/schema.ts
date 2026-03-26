@@ -15,6 +15,10 @@ export const users = pgTable("user", {
   firstname: text("firstname").notNull().default(""),
   lastname: text("lastname").notNull().default(""),
   role: varchar("role", { length: 20 }).notNull().default("client"),
+  // Champs requis par le plugin admin de Better Auth
+  banned: boolean("banned").default(false),
+  banReason: text("ban_reason"),
+  banExpires: timestamp("ban_expires"),
 }, (table) => [
   check("role_check", sql`${table.role} IN ('client', 'admin', 'manager')`),
 ]);
@@ -28,6 +32,8 @@ export const sessions = pgTable("session", {
   ipAddress: text("ip_address"),
   userAgent: text("user_agent"),
   userId: text("user_id").notNull().references(() => users.id, { onDelete: "cascade" }),
+  // Champ requis par le plugin admin de Better Auth
+  impersonatedBy: text("impersonated_by"),
 });
 
 export const accounts = pgTable("account", {

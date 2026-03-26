@@ -132,7 +132,7 @@ export default async function EtablissementPage(props: Props) {
                             {suiteImages[suite.id] ? (
                                 <img
                                     src={suiteImages[suite.id].link}
-                                    alt={suiteImages[suite.id].description}
+                                    alt={suiteImages[suite.id].description ?? ""}
                                     className="w-full h-48 object-cover"
                                 />
                             ) : (
