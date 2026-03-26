@@ -28,7 +28,6 @@ export default function ReservationForm({
   const [dateBegin, setDateBegin] = useState("");
   const [dateEnd, setDateEnd] = useState("");
   const [error, setError] = useState<string | null>(null);
-  const [success, setSuccess] = useState(false);
   const [pending, setPending] = useState(false);
 
   const today = new Date().toISOString().split("T")[0];
@@ -49,7 +48,7 @@ export default function ReservationForm({
     if (result?.error) {
       setError(result.error);
     } else {
-      setSuccess(true);
+      router.push("/client/reservation?success=true");
     }
   }
 
@@ -66,26 +65,6 @@ export default function ReservationForm({
         >
           Se connecter
         </Link>
-      </div>
-    );
-  }
-
-  if (success) {
-    return (
-      <div className="text-center py-12">
-        <p className="text-lg font-medium mb-2">Réservation confirmée !</p>
-        <p className="text-foreground/60 mb-8">
-          Votre réservation a bien été enregistrée.
-        </p>
-        <button
-          onClick={() => {
-            if (window.history.length > 1) router.back();
-            else router.push("/");
-          }}
-          className="inline-block bg-icon text-white px-6 py-3 rounded-full text-sm font-medium hover:opacity-90 transition-opacity"
-        >
-          Retour
-        </button>
       </div>
     );
   }
